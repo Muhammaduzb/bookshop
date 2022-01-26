@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Kirish</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/style1.css}">
+</head>
+<body>
+<section class="w3l-login-6">
+    <div class="login-hny">
+        <div class="form-content">
+            <div class="form-right">
+                <div class="overlay">
+                    <div class="grid-info-form">
+                        <h3> </h3>
+                    </div>
+
+                </div>
+            </div>
+            <div class="form-left">
+                <div class="middle">
+                    <h4>Profilga kirish</h4>
+                </div>
+                <form th:action="@{/auth/login}" method="post" class="signin-form">
+                    <div class="form-input">
+                        <label for="username">Telefon raqam:</label>
+                        <input type="text" id="username" name="username" placeholder="998991234567"
+                               required pattern="[0-9 ()+-]{17}$"
+                               oninvalid="this.setCustomValidity('Telefon raqamingizni to`liq kiriting!')"
+                               oninput="setCustomValidity('')" maxlength="17"/>
+                    </div>
+                    <div class="form-input">
+                        <label for="password">Parol:</label>
+                        <input type="password" id="password" name="password"
+                               required pattern="[A-Za-z0-9]{6,16}"
+                               oninvalid="this.setCustomValidity('Parol kamida 6 ta belgidan iborat! Faqat lotin alifbosidagi katta,kichik harflardan va sonlardan foydalaning!')"
+                               oninput="setCustomValidity('')" placeholder="Parol:"/>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-12">
+                            <button id="registerbtn" class="btn btn-primary" type="submit">Kirish</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="pad-all">
+                    <a href="/auth/sign/up" class="btn-link mar-lft">Ro'yhatdan o'tmaganmisiz?</a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+<script th:href="@{/assets/js/bootstrap.js}"></script>
+<script>
+    document.getElementById('username').addEventListener('input', function (e) {
+        var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,2})(\d{0,3})(\d{0,2})(\d{0,2})/);
+        e.target.value = !x[2] ? x[1] : '+' + x[1] + ' ' + x[2] + (x[3] ? ' ' + x[3] : '') + (x[4] ? '-' + x[4] : '') + (x[5] ? '-' + x[5] : '') ;
+    });
+</script>
+</body>
+</html>

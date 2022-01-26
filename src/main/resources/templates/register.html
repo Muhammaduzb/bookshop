@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Ro'yhatdan o'tish</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        .row{padding-top: 1rem;}
+        body{background-color: #ffffff;color: #f1f1f1;}
+        .container{background-color: white;border-radius: 20px;}
+    </style>
+    <link rel="stylesheet"  th:href="@{/assets/css/bootstrap.css}"/>
+    <link rel="stylesheet"  th:href="@{/assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/style1.css}">
+</head>
+<body>
+<section class="w3l-login-6">
+    <div class="login-hny">
+        <div class="form-content">
+            <div class="form-right">
+                <div class="overlay">
+                    <div class="grid-info-form">
+                        <h3> </h3>
+                    </div>
+
+                </div>
+            </div>
+            <div class="form-left">
+                <div class="middle">
+                    <h4>Ro'yhatdan o'tish</h4>
+                    <!--                    <p>Bu juda oson</p>-->
+                </div>
+                <form  th:action="@{/auth/sign/up}" th:object="${registerReq}" method="post" class="signin-form">
+                    <div class="form-input">
+                        <label for="username">Telefon raqam:<sup class="text-danger">*</sup>
+                            <span class="text-danger" th:text="${result}"></span></label>
+                        <input type="text"
+                               placeholder="998991234567"
+                               id="username"
+                               th:field="*{username}"/>
+                        <span class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">aaa</span>
+                    </div>
+                    <div class="form-input">
+
+                        <label for="password">Parol:<sup class="text-danger">*</sup></label>
+                        <input type="password"
+                               placeholder="Parol:"
+                               th:field="*{password}"
+                               id="password">
+                        <span class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+
+                    </div>
+
+                    <div class="row mt-2">
+                    <div class="col-md-12">
+                        <button id="registerbtn" class="btn btn-primary" type="submit">Register</button>
+                    </div>
+                </div>
+                </form>
+                <div class="pad-all">
+                    <a href="/auth/login" class="btn-link mar-lft">Ro'yhatdan o'tganmisiz?</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+</section>
+
+<script th:href="@{/assets/js/bootstrap.js}"></script>
+<script>
+    document.getElementById('username').addEventListener('input', function (e) {
+        var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,2})(\d{0,3})(\d{0,2})(\d{0,2})/);
+        e.target.value = !x[2] ? x[1] : '+' + x[1] + ' ' + x[2] + (x[3] ? ' ' + x[3] : '') + (x[4] ? '-' + x[4] : '') + (x[5] ? '-' + x[5] : '') ;
+    });
+</script>
+</body>
+</html>

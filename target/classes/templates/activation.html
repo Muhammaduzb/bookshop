@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/style1.css}">
+</head>
+<body>
+<section class="w3l-login-6">
+    <div class="login-hny">
+        <div class="form-content">
+            <div class="form-right">
+                <div class="overlay">
+                    <div class="grid-info-form">
+                        <h3> </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="form-left">
+                <div class="middle">
+                    <h4>Aktive qilish</h4>
+                </div>
+                <form th:action="@{/auth/wActivate/user}" th:object="${activationReq}" method="post" class="signin-form">
+                    <div class="form-input">
+                        <label>Enter active code<sup class="text-danger">*</sup></label>
+                        <input type="text" class="form-control" name="activeCode" maxlength="4"
+                               required pattern="[0-9]{4}$"
+                               oninvalid="this.setCustomValidity('Iltimos 4 honali aktiv kodni kiriting')"
+                               oninput="setCustomValidity('')" placeholder="Aktiv kodni kiriting!"/>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-12">
+                            <button id="registerbtn" class="btn btn-primary" type="submit">Aktiv qilish</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="pad-all">
+                    <a href="/auth/login" class="btn-link mar-lft">Ro'yhatdan o'tganmisiz?</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script th:href="@{/assets/js/bootstrap.js}"></script>
+</body>
+</html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</body>
+</html>

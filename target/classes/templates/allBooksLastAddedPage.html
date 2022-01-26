@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="eng"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title></title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" th:href="@{/assets/css/new/style.css}" />
+    <link rel="stylesheet" th:href="@{/assets/css/new/style1.css}" />
+    <link rel="stylesheet" th:href="@{/assets/css/new/card.css}" />
+    <link
+            rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"
+    />
+    <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css?family=Open+Sans"
+    />
+    <link rel="stylesheet" th:href="@{/assets/css/new/navbar.css}" />
+    <link rel="stylesheet" th:href="@{/assets/css/new/swiper.css}" />
+
+    <script th:src="@{/assets/js/new/swiper.js}"></script>
+    <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+            integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+            crossorigin="anonymous"
+    />
+</head>
+
+<body>
+<div class="nav-bar">
+    <ul class="menu">
+        <span class="static-menu-wrapper">
+          <li class="menu-item menu-item-static"><a href="/">BookClub</a></li>
+          <li class="menu-item menu-item-static" sec:authorize="hasRole('ROLE_USER')">
+            <div class="abc">
+<!--              <i class="fa fa-book"></i>-->
+              <a  class=''    id="addBookButton" onclick="checkAddressExist()">Kitob
+                qo'shish
+                  <!--                <i class=" fas fa-plus"></i>-->
+              </a>
+            </div>
+          </li>
+            <!--          <li class="menu-item menu-item-static" sec:authorize="hasRole('ROLE_USER')">-->
+            <!--            <div class="abc">-->
+            <!--&lt;!&ndash;              <i class="fa fa-book"></i>&ndash;&gt;-->
+            <!--              <a th:href="@{/}" class=''>Hamma kitoblar-->
+            <!--&lt;!&ndash;                <i class="fas fa-list-ol"></i>&ndash;&gt;-->
+            <!--              </a>-->
+            <!--            </div>-->
+            <!--          </li>-->
+          <li class="menu-item menu-item-static" sec:authorize="hasRole('ROLE_USER')">
+            <div class="abc">
+<!--              <i class="fa fa-book"></i>-->
+              <a  class='' id="getMyBooks">Mening kitoblarim
+                  <!--                <i class="fas fa-list-ol"></i>-->
+              </a>
+            </div>
+          </li>
+          <li class="menu-item menu-item-static" sec:authorize="isAnonymous()">
+            <div class="abc">
+<!--              <i class="fa fa-book"></i>-->
+              <a href="/auth/sign/up" >
+                    Ro'yhatdan o'tish <i class="fas fa-sign-out-alt"></i></a>
+            </div>
+          </li>
+          <li class="menu-item menu-item-static" sec:authorize="isAnonymous()">
+            <div class="abc">
+<!--              <i class="fa fa-book"></i>-->
+              <a href="/auth/login" >
+                    Kirish <i class="fas fa-sign-out-alt"></i></a>
+            </div>
+          </li>
+        </span>
+        <li class="menu-item" style="z-index: 9999!important;" id="search"><i class="fa fa-search"></i></li>
+        <label style="color:red;" id="checkAddress"></label>
+        <li class="menu-item toggler" onclick="togglerFunc()">
+            <i class="fa fa-bars"></i>
+        </li>
+    </ul>
+    <div class="search-wrapper">
+        <div class="search-form-wrapper">
+            <form class="search-form">
+                <i class="fa fa-search"></i>
+                <input class="search-field" style="z-index: 8!important;    " placeholder="Nomi va yozuvchi orqali kitobni izlash" type="text" id="searchBook" />
+            </form>
+        </div>
+    </div>
+    <div class="toggled-menu">
+
+        <button  class='card1-btn' data-toggle="modal"  style="margin-top: 9px;border-radius: 30px;background-color: #0071E3"
+                 id="addAddress" data-target="#addAddressModal" >Mening manzilim
+            <!--          <i class="fas fa-home"></i>-->
+        </button>
+        <a href="/logout"  class="btn btn-danger" style="border-radius: 30px !important;">Chiqish <i class="fas fa-sign-out-alt"></i></a>
+    </div>
+</div>
+
+<div class="background-overlay"></div>
+<div class="wrapper" id="carouselid">
+    <p  style="padding-top: 90px; padding-left: 20px; ">Yaqinda qo'shilgan kitoblar</p>
+    <div class="card-container " >
+        <!--        <div id="myBooks" >-->
+
+        <div id="defaultAllBooks" style="display:contents">
+
+            <div th:each="book:${bookPage}">
+                <div class="card" >
+                    <div class="img" >
+                        <img th:src="|data:image/png;base64,${book.picture}|" alt='' />
+                    </div>
+                    <div class="content">
+                        <p class="title" style="text-transform: uppercase; padding-left: 0px!important;" th:text="${book.name}"></p>
+                        <button
+                                class="card1-btn"
+                                data-toggle="modal"
+                                th:attr="data-target='#batafsilKitob'+${book.bookid}">
+                            Batafsil
+                        </button>
+                    </div>
+                </div>
+                <div class="modal fade" th:id="'batafsilKitob' + ${book.bookid}" tabindex="1111" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"                            >
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close"  data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="img" >
+                                    <img th:src="|data:image/png;base64,${book.picture}|" alt='' />
+                                </div>
+                                <p  class="title" style="text-transform: uppercase; padding-left: 0px!important;" th:text="${book.name}"></p>
+                                <p th:text="${book.username}"></p>
+                                <p  style='text-transform: capitalize' th:text="${book.author}"></p>
+                                <p th:text="${book.language}"></p>
+                                <p th:text="${book.comment}"></p>
+                                <p th:text="${book.region}"></p>
+                                <p th:text="${book.district}"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+<div class="wrapper">
+    <div id="pstyle" style="display: none"><p  style="padding-top: 90px; padding-left: 20px; ">Mening kitoblarim</p>
+    </div>
+    <div id="pstyle2" style="display: none"><p  style="padding-top: 90px; padding-left: 20px; ">Qidirilgan kitoblar</p>
+    </div>
+    <div class="card-container">
+
+        <div id="myBooks">
+
+
+        </div>
+
+        <div id="mySearchedBooks" >
+        </div>
+    </div>
+</div>
+<footer class="page-footer font-small blue" style="margin-left: 49%;">
+    <!--    text-center py-3-->
+    <!-- Copyright -->
+
+    <ul class="pagination pg-blue" style="">
+        <li th:each="pageNumber:${numbers}" class="page-item"
+            th:class="${pageNumber == bookPage.number} ? active">
+            <a class="page-link" style="color: #007bff!important;" th:href="@{'/actionBook/allBooksLastAddedPage/?page='+${pageNumber}}" th:text="${pageNumber+1}"></a>
+        </li>
+    </ul>
+
+    <!-- Copyright -->
+
+</footer>
+<!-- Modal -->
+<div
+        class="modal fade"
+        id="exampleModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                >
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="aboutBookShowInModal">
+                <div class="img">
+
+                </div>
+                <p>Book Title</p>
+                <p>Cho'lpon</p>
+                <p>99898989</p>
+                <p>Nksadk4d dfsdfsdfab dsfsadfdf dsfsdfsdfsd</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="addBook" role="dialog" tabindex="-1" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+
+        <!-- Add book content-->
+        <div class="modal-content" id="modalContent">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" th:action="@{/actionBook/addBook}"
+                      th:object="${book}" enctype="multipart/form-data" class="needs-validation" novalidate>
+                    <div class="form-row">
+                        <div class="col-md-4 mb-3 md-form">
+                            <label for="">Kitob nomi:</label>
+                            <input type="text" name="name" class="form-control" placeholder="" value=""
+                                   required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3 md-form">
+                            <label for="">Yozuvchi:</label>
+                            <input type="text" name="author" class="form-control" value="" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3 md-form">
+                            <label for="">Tilni tanlang:</label>
+                            <select name="language" class="form-control" aria-describedby="inputGroupPrepend2">
+                                <option value="0">O'zbek</option>d
+                                <option value="1">Rus</option>
+                                <option value="2">Kiril</option>
+                                <option value="3">English</option>
+                                <option value="4">Boshqa</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                <!--                                Please choose a username.-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-6 mb-3 md-form">
+                            <label for="">Kitob haqida izoh:</label>
+                            <textarea name="comment" type="text"  class="form-control" >
+
+                                            </textarea>
+                            <div class="invalid-feedback">
+                                Iltimos izoh ham kiriting!
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-6 mb-3 md-form">
+                            <label for="">Rasm:</label>
+                            <input type="file" class=""  name="picture" value="tanlash" >
+                            <div class="invalid-feedback">
+                                Iltimos rasm tanlang!
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary btn-sm btn-rounded" type="submit">Saqlash</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-default btn btn-danger" data-dismiss="modal" id="modalButton1">Yopish</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="modal fade" id="addAddressModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!--                                add address-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+
+                <form id="addAddressForm" class="form-signin" method="post">
+                    Tanlang
+                    <div class="form-label-group">
+                        <select id="region" name="regions" class="form-control"
+                                required>
+                            <option value="0">Viloyat:</option>
+                        </select>
+                    </div>
+                    <p></p>
+                    Tanlang
+                    <div class="form-label-group">
+                        <select id="district" name="districts" class="form-control"
+                                required>
+                            <option value="0">Tuman:</option>
+                        </select>
+                    </div>
+                    <p></p>
+
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <input class="btn btn-success" type="submit" id="address" value="Saqlash" data-dismiss="modal" >
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!--                    delete my book-->
+<!-- Modal -->
+<div class="modal fade" id="deleteBookModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Kitobni o`chirish</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Siz haqiqatan ham kitobni o'chirmoqchimisiz?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Yo'q</button>
+                <button type="button" id="deleteBook" data-dismiss="modal" class="btn btn-primary">Ha</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script
+        src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"
+></script>
+<script
+        src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"
+></script>
+<script
+        src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"
+></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.2/velocity.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.2/velocity.ui.min.js"></script>
+<script th:src="@{/assets/js/new/script.js}"></script>
+<script th:src="@{/assets/js/controljs.js}"></script>
+<script th:src="@{/assets/js/regions.js}"></script>
+<!--<script th:src="@{/assets/js/main.js}"></script>-->
+<script th:src="@{/assets/js/jQuery.min.js}"></script>
+<script th:src="@{/assets/js/bootstrap.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.5.3/js/bootstrapValidator.js"></script>
+<script>
+</script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+</body>
+</html>
